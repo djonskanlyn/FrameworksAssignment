@@ -22,8 +22,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-#SECRET_KEY = 'django-insecure-3nt5rsg#iojqtlm+))+t-$atcvckast&n1#bf_j&fig6yl5(8_'
-SECRET_KEY = os.environ.get('FRAMEWORKS_PROJECT_SECRET_KEY')
+SECRET_KEY = 'django-insecure-3nt5rsg#iojqtlm+))+t-$atcvckast&n1#bf_j&fig6yl5(8_'
+#SECRET_KEY = os.environ.get('FRAMEWORKS_PROJECT_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 #DEBUG = True
@@ -91,7 +91,9 @@ WSGI_APPLICATION = 'frameworks_project.wsgi.application'
 #     }
 # }
 
-DATABASE_URL = os.environ.get('FRAMEWORKS_PROJECT_DATABASE_URL')
+#DATABASE_URL = os.environ.get('FRAMEWORKS_PROJECT_DATABASE_URL')
+DATABASE_URL = "postgresql://frameworksassignment_user:mTHkBGQB6MjFQfTemVPzN6uF8RwwGxli@dpg-cr07nkdumphs73922c20-a.frankfurt-postgres.render.com/frameworksassignment"
+
 
 DATABASES = {
     'default': dj_database_url.config(
@@ -167,5 +169,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.environ.get('FRAMEWORKS_PROJECT_EMAIL_USER')
-EMAIL_HOST_PASSWORD = os.environ.get('FRAMEWORKS_PROJECT_EMAIL_PASS')
+EMAIL_HOST_USER = "johnscanlon.email.test@gmail.com"
+EMAIL_HOST_PASSWORD = "hfip raor dczc hzug"
+
+#EMAIL_HOST_USER = os.environ.get('FRAMEWORKS_PROJECT_EMAIL_USER')
+#EMAIL_HOST_PASSWORD = os.environ.get('FRAMEWORKS_PROJECT_EMAIL_PASS')
