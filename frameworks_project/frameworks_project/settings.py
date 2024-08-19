@@ -22,10 +22,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-3nt5rsg#iojqtlm+))+t-$atcvckast&n1#bf_j&fig6yl5(8_'
+#SECRET_KEY = 'django-insecure-3nt5rsg#iojqtlm+))+t-$atcvckast&n1#bf_j&fig6yl5(8_'
+SECRET_KEY = os.environ.get('FRAMEWORKS_PROJECT_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+#DEBUG = True
+DEBUG = False
+
+
 
 ALLOWED_HOSTS = []
 
@@ -47,6 +51,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -86,22 +91,11 @@ WSGI_APPLICATION = 'frameworks_project.wsgi.application'
 #     }
 # }
 
-# postgresql://frameworksassignment_user:mTHkBGQB6MjFQfTemVPzN6uF8RwwGxli@dpg-cr07nkdumphs73922c20-a.frankfurt-postgres.render.com/frameworksassignment
-
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.postgresql",
-#         "NAME": "frameworksassignment",
-#         "USER": "frameworksassignment_user",
-#         "PASSWORD": "mTHkBGQB6MjFQfTemVPzN6uF8RwwGxli",
-#         "HOST": "dpg-cr07nkdumphs73922c20-a.frankfurt-postgres.render.com",
-#         "PORT": "5432",
-#     }
-# }
+DATABASE_URL = os.environ.get('FRAMEWORKS_PROJECT_DATABASE_URL')
 
 DATABASES = {
     'default': dj_database_url.config(
-        default='postgresql://frameworksassignment_user:mTHkBGQB6MjFQfTemVPzN6uF8RwwGxli@dpg-cr07nkdumphs73922c20-a.frankfurt-postgres.render.com/frameworksassignment',
+        default=DATABASE_URL,
         conn_max_age=600
     )
 }
@@ -141,7 +135,18 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
+# This setting informs Django of the URI path from which your static files will be served to users
+# Here, they well be accessible at your-domain.onrender.com/static/... or yourcustomdomain.com/static/...
 STATIC_URL = '/static/'
+
+# This production code might break development mode, so we check whether we're in DEBUG mode
+if not DEBUG:
+    # Tell Django to copy static assets into a path called `staticfiles` (this is specific to Render)
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    # Enable the WhiteNoise storage backend, which compresses static files to reduce disk use
+    # and renames the files with unique names for each version to support long-term caching
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

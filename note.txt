@@ -17,3 +17,24 @@ Control-C (to exit)
 python manage.py migrate
 
 python manage.py runserver
+
+
+# DATABASE_URL = "postgresql://frameworksassignment_user:mTHkBGQB6MjFQfTemVPzN6uF8RwwGxli@dpg-cr07nkdumphs73922c20-a.frankfurt-postgres.render.com/frameworksassignment"
+
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "frameworksassignment",
+#         "USER": "frameworksassignment_user",
+#         "PASSWORD": "mTHkBGQB6MjFQfTemVPzN6uF8RwwGxli",
+#         "HOST": "dpg-cr07nkdumphs73922c20-a.frankfurt-postgres.render.com",
+#         "PORT": "5432",
+#     }
+# }
+
+# DATABASES = {
+#     'default': dj_database_url.config(
+#         default='postgresql://frameworksassignment_user:mTHkBGQB6MjFQfTemVPzN6uF8RwwGxli@dpg-cr07nkdumphs73922c20-a.frankfurt-postgres.render.com/frameworksassignment',
+#         conn_max_age=600
+#     )
+# }
