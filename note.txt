@@ -18,6 +18,7 @@ python manage.py migrate
 
 python manage.py runserver
 
+#SECRET_KEY = 'django-insecure-3nt5rsg#iojqtlm+))+t-$atcvckast&n1#bf_j&fig6yl5(8_'
 
 # DATABASE_URL = "postgresql://frameworksassignment_user:mTHkBGQB6MjFQfTemVPzN6uF8RwwGxli@dpg-cr07nkdumphs73922c20-a.frankfurt-postgres.render.com/frameworksassignment"
 
