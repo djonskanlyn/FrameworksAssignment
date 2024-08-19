@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -77,10 +78,21 @@ WSGI_APPLICATION = 'frameworks_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "frameworksassignment",
+        "USER": "frameworksassignment_user",
+        "PASSWORD": "mTHkBGQB6MjFQfTemVPzN6uF8RwwGxli",
+        "HOST": "dpg-cr07nkdumphs73922c20-a.frankfurt-postgres.render.com",
+        "PORT": "5432",
     }
 }
 
@@ -135,3 +147,10 @@ LOGIN_URL = 'login'
 MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
 
+# Email Backend
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.environ.get('FRAMEWORKS_PROJECT_EMAIL_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('FRAMEWORKS_PROJECT_EMAIL_PASS')
