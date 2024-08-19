@@ -26,8 +26,8 @@ SECRET_KEY = 'django-insecure-3nt5rsg#iojqtlm+))+t-$atcvckast&n1#bf_j&fig6yl5(8_
 #SECRET_KEY = os.environ.get('FRAMEWORKS_PROJECT_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-#DEBUG = False
+#DEBUG = True
+DEBUG = False
 
 
 
