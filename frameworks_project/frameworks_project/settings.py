@@ -86,7 +86,8 @@ WSGI_APPLICATION = 'frameworks_project.wsgi.application'
 #     }
 # }
 
-DATABASE_URL = os.environ.get('FRAMEWORKS_PROJECT_DATABASE_URL')
+#DATABASE_URL = os.environ.get('FRAMEWORKS_PROJECT_DATABASE_URL')
+DATABASE_URL = "postgresql://frameworksassignment_user:mTHkBGQB6MjFQfTemVPzN6uF8RwwGxli@dpg-cr07nkdumphs73922c20-a.frankfurt-postgres.render.com/frameworksassignment"
 
 DATABASES = {
     'default': dj_database_url.config(
