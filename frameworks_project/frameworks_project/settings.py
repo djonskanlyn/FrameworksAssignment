@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -85,15 +86,24 @@ WSGI_APPLICATION = 'frameworks_project.wsgi.application'
 #     }
 # }
 
+# postgresql://frameworksassignment_user:mTHkBGQB6MjFQfTemVPzN6uF8RwwGxli@dpg-cr07nkdumphs73922c20-a.frankfurt-postgres.render.com/frameworksassignment
+
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "frameworksassignment",
+#         "USER": "frameworksassignment_user",
+#         "PASSWORD": "mTHkBGQB6MjFQfTemVPzN6uF8RwwGxli",
+#         "HOST": "dpg-cr07nkdumphs73922c20-a.frankfurt-postgres.render.com",
+#         "PORT": "5432",
+#     }
+# }
+
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "frameworksassignment",
-        "USER": "frameworksassignment_user",
-        "PASSWORD": "mTHkBGQB6MjFQfTemVPzN6uF8RwwGxli",
-        "HOST": "dpg-cr07nkdumphs73922c20-a.frankfurt-postgres.render.com",
-        "PORT": "5432",
-    }
+    'default': dj_database_url.config(
+        default='postgresql://frameworksassignment_user:mTHkBGQB6MjFQfTemVPzN6uF8RwwGxli@dpg-cr07nkdumphs73922c20-a.frankfurt-postgres.render.com/frameworksassignment',
+        conn_max_age=600
+    )
 }
 
 
@@ -131,7 +141,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
