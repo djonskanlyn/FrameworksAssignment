@@ -156,7 +156,6 @@ LOGIN_REDIRECT_URL = 'blog-home'
 LOGIN_URL = 'login'
 
 MEDIA_ROOT = BASE_DIR / 'media'
-# MEDIA_ROOT = '/media/'
 MEDIA_URL = '/media/'
 
 # Email Backend
