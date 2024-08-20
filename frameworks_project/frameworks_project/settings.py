@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('FRAMEWORKS_PROJECT_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['frameworksassignment.onrender.com', 'localhost', '127.0.0.1']
 
@@ -133,7 +133,7 @@ USE_TZ = True
 
 # This setting informs Django of the URI path from which your static files will be served to users
 # Here, they well be accessible at your-domain.onrender.com/static/... or yourcustomdomain.com/static/...
-STATIC_URL = '/static/'
+STATIC_URL = 'static/'
 
 #This production code might break development mode, so we check whether we're in DEBUG mode
 if not DEBUG:
