@@ -46,3 +46,5 @@ mkdir -p /var/media/profile_pics
 wget https://raw.githubusercontent.com/djonskanlyn/FrameworksAssignmentImages/main/your_image_file.jpg -O /var/media/profile_pics/your_image_file.jpg
 
 wget https://raw.githubusercontent.com/djonskanlyn/FrameworksAssignmentImages/main/default.jpg -O /var/media/profile_pics/default.jpg
+
+

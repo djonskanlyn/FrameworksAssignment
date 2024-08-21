@@ -3,7 +3,11 @@
 {% block content %}
     <div class="content-section">
         <div class="media">
-            <img class="rounded-circle account-img" src="{{ user.profile.image.url }}">
+            {% if user.profile.image %}
+                <img class="rounded-circle account-img" src="{{ user.profile.image.url }}" alt="{{ user.username }}'s profile picture">
+            {% else %}
+                <img class="rounded-circle account-img" src="{{ MEDIA_URL }}profile_pics/default.jpg" alt="Default profile picture">
+            {% endif %}
             <div class="media-body">
                 <h2 class="account-heading">{{ user.username }}</h2>
                 <p class="text-secondary">{{ user.email }}</p>
@@ -14,10 +18,7 @@
             <fieldset class="form-group">
                 <legend class="border-bottom mb-4">Profile Info</legend>
                 {{ u_form|crispy }}
-                <!-- <div style="visibility: hidden;"> -->
-                <div>
-                    {{ p_form|crispy }}
-                </div>
+                {{ p_form|crispy }}
             </fieldset>
             <div class="form-group">
                 <button class="btn btn-outline-info" type="submit">Update</button>
