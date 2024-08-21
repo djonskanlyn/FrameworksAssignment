@@ -19,15 +19,3 @@ class Command(BaseCommand):
             self.stdout.write(self.style.SUCCESS(f"File successfully uploaded to S3: {file_path}"))
         except Exception as e:
             self.stdout.write(self.style.ERROR(f"Error uploading file to S3: {e}"))
-
-
-
-# import boto3
-
-# s3 = boto3.client('s3',aws_access_key_id=os.getenv('FP_AWS_ACCESS_KEY_ID'),aws_secret_access_key=os.getenv('FP_AWS_SECRET_ACCESS_KEY'),region_name='eu-north-1')
-
-# try:
-#     s3.put_object(Bucket='frameworks-assignment-media-bucket', Key='test_upload/test_file.txt', Body=b'This is a test file.')
-#     print("File successfully uploaded.")
-# except Exception as e:
-#     print(f"Error: {e}")
