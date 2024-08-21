@@ -11,9 +11,6 @@ class Profile(models.Model):
     def __str__(self):
         return f'{self.user.username} Profile'
     
-    # def save(self, *args, **kwargs):
-    #     super().save(*args, **kwargs)
-    
     def save(self, *args, **kwargs):
         # Save the model only at the end to prevent multiple save calls
         # Resize the image before the first save call
