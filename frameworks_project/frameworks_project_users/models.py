@@ -15,25 +15,24 @@ class Profile(models.Model):
     #     super().save(*args, **kwargs)
     
     def save(self, *args, **kwargs):
-        # Save the model first to ensure we have access to the image
-        super().save(*args, **kwargs)
-
-        # Check if an image exists
+        # Save the model only at the end to prevent multiple save calls
+        # Resize the image before the first save call
         if self.image:
-            img = Image.open(self.image)  # Open the uploaded image file
+            # Open the image from storage (in-memory if using S3)
+            img = Image.open(self.image)
 
-            # Resize the image if necessary (e.g., if it's larger than 300x300)
+            # Resize the image if it's larger than the desired size
             if img.height > 300 or img.width > 300:
                 output_size = (300, 300)
-                img.thumbnail(output_size)  # Resize the image while maintaining aspect ratio
+                img.thumbnail(output_size)
 
-                # Save the resized image to a BytesIO object (in memory)
+                # Save the resized image in-memory using BytesIO
                 img_io = BytesIO()
-                img_format = img.format if img.format else 'JPEG'  # Get the original format (e.g., JPEG, PNG)
+                img_format = img.format if img.format else 'JPEG'  # Preserve the original format
                 img.save(img_io, format=img_format)
 
-                # Replace the image field with the resized image
+                # Use the same file name and avoid re-appending "profile_pics/"
                 self.image.save(self.image.name, ContentFile(img_io.getvalue()), save=False)
 
-        # Call save again to save the resized image
+        # Call save only once after the image is processed
         super().save(*args, **kwargs)
