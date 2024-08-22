@@ -12,6 +12,8 @@
         <!-- main.css -->
         <link rel="stylesheet" type="text/css" href="{% static 'blog/main.css' %}">
 
+        {% block extra_css %}{% endblock extra_css %} 
+
         {% if title %}
             <title> Django Blog - {{ title }}</title>
         {% else %}
@@ -66,7 +68,7 @@
                         <p class='text-muted'>These links will take you to what our blog offers.
                             <ul class="list-group">
                                 <li class="list-group-item list-group-item-light"><a href="{% url 'blog-home' %}">Our Blog</a></li>
-                                <li class="list-group-item list-group-item-light">Our Recipes</li>
+                                <li class="list-group-item list-group-item-light"><a href="{% url 'our-recipes' %}">Our Recipes</a></li>
                                 <li class="list-group-item list-group-item-light">Your Recipes</li>
                                 <li class="list-group-item list-group-item-light">Your Shopping List</li>
                             </ul>
@@ -81,6 +83,9 @@
         
         <!-- Popper JS -->
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+
+        <!-- Block for additional JS scripts -->
+        {% block extra_js %}{% endblock extra_js %}
     </body>
 
 </html>
