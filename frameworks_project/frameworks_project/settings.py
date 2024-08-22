@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
-DEBUG = False
+DEBUG = True
 if not DEBUG:
     SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
@@ -127,26 +127,32 @@ LOGIN_REDIRECT_URL = 'blog-home'
 
 LOGIN_URL = 'login'
 
+
+# ===================
 # Email Backend
+# ===================
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = os.environ.get('FRAMEWORKS_PROJECT_EMAIL_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('FRAMEWORKS_PROJECT_EMAIL_PASS')
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
-EMAIL_HOST_USER = os.environ.get('FRAMEWORKS_PROJECT_EMAIL_USER')
-EMAIL_HOST_PASSWORD = os.environ.get('FRAMEWORKS_PROJECT_EMAIL_PASS')
 
+
+# ===================
 # AWS S3 Configuration
+# ===================
 AWS_ACCESS_KEY_ID = os.environ.get('FP_AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = os.environ.get('FP_AWS_SECRET_ACCESS_KEY')
 AWS_STORAGE_BUCKET_NAME = 'frameworks-assignment-media-bucket'
 AWS_S3_REGION_NAME = 'eu-north-1'
 AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
 
-
 AWS_S3_FILE_OVERWRITE = False  # Ensure that files with the same name are not overwritten
 AWS_DEFAULT_ACL = None  # Manage access control using AWS S3's bucket policies
 AWS_S3_ADDRESSING_STYLE = 'virtual'
+
 
 # ===================
 # Static Files Setup

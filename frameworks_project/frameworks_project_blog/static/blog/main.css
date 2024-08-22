@@ -1,11 +1,16 @@
 body {
-    background: #fafafa;
-    color: #333333;
+    color: #44412a;
     margin-top: 5rem;
+    background-image: url('../images/background.webp');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    height: 100vh;
 }
 
 h1, h2, h3, h4, h5, h6 {
-    color: #444444;
+    color: #44412a;
 }
 
 ul {
@@ -13,15 +18,19 @@ ul {
 }
 
 .bg-steel {
-    background-color: #5f788a;
+    background-color: #44412a; 
 }
 
 .site-header .navbar-nav .nav-link {
-    color: #cbd5db;
+    color: #dbd8c7;
+}
+
+a.navbar-brand {
+    color: #dbd8c7 !important;
 }
 
 .site-header .navbar-nav .nav-link:hover {
-    color: #ffffff;
+    color: #c1bca7;
 }
 
 .site-header .navbar-nav .nav-link.active {
@@ -29,19 +38,19 @@ ul {
 }
 
 .content-section {
-    background: #ffffff;
+    background: #dbd8c7;
     padding: 10px 20px;
-    border: 1px solid #dddddd;
+    border: 1px solid #c1bca7;
     border-radius: 3px;
     margin-bottom: 20px;
 }
 
 .article-title {
-    color: #444444;
+    color: #44412a;
 }
 
 a.article-title:hover {
-    color: #428bca;
+    color: #817152;
     text-decoration: none;
 }
 
@@ -58,11 +67,11 @@ a.article-title:hover {
 .article-metadata {
     padding-bottom: 1px;
     margin-bottom: 4px;
-    border-bottom: 1px solid #e3e3e3
+    border-bottom: 1px solid #c1bca7;
 }
 
 .article-metadata a:hover {
-    color: #333;
+    color: #44412a;
     text-decoration: none;
 }
 
@@ -81,4 +90,8 @@ a.article-title:hover {
 
 .account-heading {
     font-size: 2.5rem;
+}
+
+.list-group-item {
+    background-color: #dbd8c7;
 }
