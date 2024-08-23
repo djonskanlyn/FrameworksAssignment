@@ -1,22 +1,55 @@
 // Define grid options with empty rowData
 const gridOptions = {
-    rowData: [],  // Initially empty, data will be fetched and set later
+    rowData: [],
     columnDefs: [
-        { field: "idMeal", headerName: "Recipe Id" },
-        { field: "strMeal", headerName: "Recipe Name" },
+        { field: "idMeal", headerName: "Recipe Id", flex: 0.75 },
+        { field: "strMealThumb", headerName: "Image", filter: false,
+            cellRenderer: function(params) {
+                return `<img src="${params.value}" style="width: 100px; height: 100px; border-radius: 10px;" alt="Meal Image">`;
+            }
+         },
+        { field: "strMeal", headerName: "Recipe Name", flex: 1.5 },
         { field: "strCategory", headerName: "Category" },
         { field: "strArea", headerName: "Region" },
-        { field: "strTags", headerName: "Tags" },
-        { field: "strYoutube", headerName: "Youtube Link" },
+        { field: "strTags", headerName: "Tags",
+            cellRenderer: function(params) {
+                // Replace commas with semicolons and spaces in the tags string
+                if (params.value) { 
+                    return params.value.replace(/,/g, '; ');
+                }
+                return '';
+            }
+        },
+        { field: "allIngredients", headerName: "Ingredients", flex: 2,
+            cellRenderer: function(params) {
+                 return params.value || '';
+            }
+        },
+        { field: "strYoutube", headerName: "Actions", filter: false, 
+            cellRenderer: function(params) {
+                // Generate a link to the YouTube video
+                let youtubeLink = params.value ? `<a href="${params.value}" target="_blank" class="btn btn-outline-warning btn-sm" style="margin-bottom: 5px;">Youtube</a>` : '';
+
+                // Generate a link to the recipe detail page
+                let detailsLink = `<a href="/recipes/our_recipes_detail/${params.data.idMeal}" class="btn btn-outline-primary btn-sm" style="margin-bottom: 5px;">Instructions</a>`;
+
+                // Return both links, styled with some space in between
+                return `<div style="display: flex; flex-direction: column;"> ${youtubeLink} ${detailsLink} </div>`;
+            }
+        },
     ],
     pagination: true,
-    paginationPageSize: 50,
-    paginationPageSizeSelector: [10,20,50,100],
+    paginationPageSize: 5,
+    paginationPageSizeSelector: [5,10,20,50,100,200],
     defaultColDef: {
         flex: 1,
         filter: true,
         sortable: true,
-        floatingFilter: true
+        floatingFilter: true,
+        resizable: true,
+        wrapText: true,
+        autoHeight: true,
+        cellStyle: { display: 'flex', alignItems: 'center' }
     }
 };
 
@@ -45,6 +78,18 @@ function removeDuplicates(meals) {
     return uniqueMeals;
 }
 
+// Function to concatenate ingredients into one field
+function getAllIngredients(meal) {
+    const ingredients = [];
+    for (let i = 1; i <= 20; i++) {
+        const ingredient = meal[`strIngredient${i}`];
+        if (ingredient) {
+            ingredients.push(ingredient);
+        }
+    }
+    return ingredients.join('; ');
+}
+
 // Function to fetch all recipes starting with each letter
 function fetchAllRecipes() {
     return Promise.all(letters.map(fetchRecipesByLetter))
@@ -63,11 +108,13 @@ document.addEventListener('DOMContentLoaded', function () {
         // Prepare the rowData in the format required by the grid
         const formattedData = allRecipes.map(meal => ({
             idMeal: meal.idMeal,
+            strMealThumb: meal.strMealThumb,
             strMeal: meal.strMeal,
             strCategory: meal.strCategory,
             strArea: meal.strArea,
             strTags: meal.strTags,
-            strYoutube: meal.strYoutube
+            strYoutube: meal.strYoutube,
+            allIngredients: getAllIngredients(meal),
         }));
 
         // Set the fetched and formatted data as the new rowData for the grid
