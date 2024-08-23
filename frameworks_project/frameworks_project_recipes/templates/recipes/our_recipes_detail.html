@@ -1,40 +1,97 @@
 {% extends "blog/base.html" %}
 {% load static %}
-{% load crispy_forms_tags %} 
+{% load crispy_forms_tags %}
 
 {% block extra_css %}
 {% endblock extra_css %}
 
 {% block content %}
     <div class="content-section">
-        <!-- Display Meal Thumbnail and Meal Name -->
-        <img src="{{ meal.strMealThumb }}" alt="Meal Image" class="img-fluid rounded" style="width: 50%;">
-        <h2>{{ meal.strMeal }}</h2>
+        <div>
+            <img src="{{ meal.strMealThumb }}" alt="Meal Image" class="img-fluid rounded" style="width: 40%;">
+            <h3>{{ meal.strMeal }}</h3>
+        </div>
 
-        <!-- Meal Instructions -->
-        <h4>Instructions</h4>
-        <p>{{ form.strInstructions.value }}</p>
+        <div class="button-row">
+            <div>
+                {% if form.strYoutube.value %}
+                <a href="{{ form.strYoutube.value }}" target="_blank" class="btn btn-warning" style="margin: 10px;">YouTube</a>
+                {% endif %}
+            </div>
+            <div>
+                <a href="{% url 'our-recipes' %}" target="_blank" class="btn btn-primary" style="margin: 10px;">Our Recipes</a>
+            </div>
+            <div>
+                <a href="{% url 'our-recipes' %}" target="_blank" class="btn btn-success" style="margin: 10px;">Save Recipe</a>
+            </div>
+        </div>
+ 
 
-        <!-- Ingredients and Measures Table -->
-        <h4>Ingredients & Measurements</h4>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Ingredient</th>
-                    <th>Measure</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for pair in form.ingredients %}
+        <div>
+            <table class="table table-bordered">
+                <tbody>
                     <tr>
-                        <td>{{ pair.ingredient }}</td>
-                        <td>{{ pair.measure }}</td>
+                        <th>Recipe ID</th>
+                        <td>{{ form.idMeal.value }}</td>
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+                    <tr>
+                        <th>Category</th>
+                        <td>{{ form.strCategory.value }}</td>
+                    </tr>
+                    <tr>
+                        <th>Region</th>
+                        <td>{{ form.strArea.value }}</td>
+                    </tr>
+                    {% if meal.strTags %}
+                    <tr>
+                        <th>Tags</th>
+                        <td>{{ meal.strTags }}</td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
 
+        <div>
+            <h5>Instructions</h5>
+            <p>{{ form.strInstructions.value }}</p>
+        </div>
+
+        <div>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Ingredient</th>
+                        <th>Measure</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pair in form.ingredients %}
+                        <tr>
+                            <td>{{ pair.ingredient }}</td>
+                            <td>{{ pair.measure }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+         </div>
+
+
+        <div>
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <th>Image URL</th>
+                        <td>{{ form.strMealThumb.value }}</td>
+                    </tr>
+                    </tr>
+                        <th>Youtube URL</th>
+                        <td>{{ form.strYoutube.value }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 {% endblock content %}
 
 {% block extra_js %}{% endblock extra_js %}
