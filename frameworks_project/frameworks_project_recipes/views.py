@@ -89,19 +89,14 @@ class SaveRecipeView(LoginRequiredMixin, TemplateView):
                         )
 
                 # Redirect to a success page or detail view
-                return redirect('our-recipes')
+                return redirect('your-recipes')
 
             else:
                 # If the API call fails, raise a 404 error
                 raise Http404("Failed to retrieve meal from external API")
 
         # If the form is invalid, raise a 404 error
-        raise Http404("Invalid meal ID")
-    
-# # Class-based view for rendering the your_recipes.html template
-# class UserRecipesView(LoginRequiredMixin, TemplateView):
-#     template_name = 'your_recipes.html'
-
+        raise Http404("Invalid meal ID")   
 
 @login_required
 def your_recipes(request):
@@ -112,15 +107,24 @@ def user_recipes_data(request):
     if request.user.is_authenticated:
         recipes = Recipe.objects.filter(user=request.user)
 
+
+
         # Prepare the data for each recipe (without ingredients)
         recipes_data = []
         for recipe in recipes:
+
+            # Get all ingredients associated with this recipe
+            ingredients = Ingredient.objects.filter(recipe=recipe).values_list('ingredient', flat=True)
+            ingredients_data = '; '.join(ingredients)
+
             recipes_data.append({
                 'id': recipe.id,
                 'recipe': recipe.recipe,
                 'category': recipe.category,
                 'region': recipe.region,
                 'image': recipe.image,
+                'youtube': recipe.youtube,
+                'ingredients_data': ingredients_data,
             })
 
         return JsonResponse(recipes_data, safe=False)
