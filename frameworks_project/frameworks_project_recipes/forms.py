@@ -28,3 +28,6 @@ class RecipeDetailForm(forms.Form):
                         'ingredient': ingredient,
                         'measure': measure if measure else ''
                     })
+
+class MealIDForm(forms.Form):
+    meal_id = forms.CharField(max_length=20, widget=forms.HiddenInput())

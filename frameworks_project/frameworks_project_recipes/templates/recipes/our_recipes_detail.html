@@ -22,7 +22,12 @@
                 <a href="{% url 'our-recipes' %}" target="_blank" class="btn btn-primary" style="margin: 10px;">Our Recipes</a>
             </div>
             <div>
-                <a href="{% url 'our-recipes' %}" target="_blank" class="btn btn-success" style="margin: 10px;">Save Recipe</a>
+                <!-- Form to Save the Recipe (only submitting meal ID) -->
+                <form method="POST" action="{% url 'save-recipe' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="meal_id" value="{{ meal.idMeal }}">
+                    <button type="submit" class="btn btn-success" style="margin: 10px;">Save Recipe</button>
+                </form>
             </div>
         </div>
  

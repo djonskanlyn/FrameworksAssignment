@@ -1,0 +1,18 @@
+{% extends "blog/base_for_grid.html" %}
+{% load static %}
+
+{% block extra_css %}
+    <link href="https://cdn.jsdelivr.net/npm/ag-grid-community/styles/ag-grid.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/ag-grid-community/styles/ag-theme-alpine.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'recipes/your_recipes.css' %}">
+{% endblock extra_css %}
+
+{% block content %}
+    <h3>Your Saved Recipes</h3>
+    <div class="ag-theme-alpine" id="your_recipes_grid" ></div>
+{% endblock content %}
+
+{% block extra_js %}
+    <script src="https://cdn.jsdelivr.net/npm/ag-grid-community/dist/ag-grid-community.min.js"></script>
+    <script src="{% static 'recipes/js/your_recipes_grid.js' %}"></script>
+{% endblock extra_js %}

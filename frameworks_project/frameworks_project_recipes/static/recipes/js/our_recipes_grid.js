@@ -53,6 +53,7 @@ const gridOptions = {
     }
 };
 
+
 // Array of letters (A-Z) to search recipes by
 const letters = 'abcdefghijklmnopqrstuvwxyz'.split('');
 
