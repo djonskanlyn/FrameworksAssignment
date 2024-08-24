@@ -22,7 +22,12 @@ const gridOptions = {
         { field: "youtube", headerName: "Actions", filter: false, 
             cellRenderer: function(params) {
                 let youtubeLink = params.value ? `<a href="${params.value}" target="_blank" class="btn btn-outline-warning btn-sm" style="margin-bottom: 5px;">Youtube</a>` : '';
-                return `<div style="display: flex; flex-direction: column;"> ${youtubeLink} </div>`;
+
+                let deleteButton = `<button class="btn btn-outline-danger btn-sm" style="margin-bottom: 5px;" onclick="deleteRecipe(${params.data.id})">Delete</button>`;
+
+                let detailsLink = `<a href="/recipes/user-recipe-detail/${params.data.id}/" class="btn btn-outline-primary btn-sm" style="margin-bottom: 5px;">Instructions</a>`;
+
+                return `<div style="display: flex; flex-direction: column;"> ${youtubeLink} ${deleteButton} ${detailsLink} </div>`;
             }
         },
     ],
@@ -53,3 +58,34 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .catch(error => console.error('Error fetching recipes:', error));
 });
+
+// Function to delete a recipe
+function deleteRecipe(recipeId) {
+    if (!confirm('Are you sure you want to delete this recipe?')) {
+        return;
+    }
+
+    fetch(`/recipes/delete-recipe/${recipeId}/`, {
+        method: 'POST',  // Use POST instead of DELETE to trigger Django's form handling
+        headers: {
+            'X-CSRFToken': getCSRFToken(),  // Include CSRF token for security
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => {
+        if (response.redirected) {
+            // If there's a redirect (after successful deletion), follow it
+            window.location.href = response.url;
+        } else {
+            alert('Failed to delete recipe');
+        }
+    })
+    .catch(error => console.error('Error deleting recipe:', error));
+}
+
+// Simplified function to get CSRF token
+function getCSRFToken() {
+    return document.cookie.split('; ')
+        .find(row => row.startsWith('csrftoken='))
+        ?.split('=')[1];
+}

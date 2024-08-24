@@ -1,11 +1,12 @@
 import requests
 from django.shortcuts import render, redirect
 from django.http import Http404
-from django.views.generic import TemplateView
+from django.urls import reverse_lazy
+from django.views.generic import TemplateView, DeleteView, DetailView
 from django.http import JsonResponse
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Recipe, Ingredient
-from .forms import RecipeDetailForm, MealIDForm
+from .forms import RecipeDetailForm, MealIDForm, UserRecipeForm, UserIngredientFormSet
 from django.contrib.auth.decorators import login_required
 
 @login_required
@@ -129,3 +130,35 @@ def user_recipes_data(request):
 
         return JsonResponse(recipes_data, safe=False)
     return JsonResponse({'error': 'Unauthorized'}, status=403)
+
+
+class RecipeDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Recipe
+    success_url = reverse_lazy('your-recipes')
+
+    def test_func(self):
+        recipe = self.get_object()
+        return recipe.user == self.request.user
+
+    def handle_no_permission(self):
+        return redirect('your-recipes')
+    
+    def post(self, request, *args, **kwargs):
+        return self.delete(request, *args, **kwargs)
+    
+class RecipeDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
+    model = Recipe
+    form_class = UserRecipeForm
+    template_name = 'recipes/your_recipes_detail.html'
+    context_object_name = 'recipe'
+
+    def test_func(self):
+        # Ensure that only the owner of the recipe can access and edit the details
+        recipe = self.get_object()
+        return recipe.user == self.request.user
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Retrieve the ingredients associated with the recipe
+        context['ingredients'] = Ingredient.objects.filter(recipe=self.get_object())
+        return context

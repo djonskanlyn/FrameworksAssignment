@@ -1,4 +1,6 @@
 from django import forms
+from django.forms import modelformset_factory
+from .models import Recipe, Ingredient
 
 class RecipeDetailForm(forms.Form):
     idMeal = forms.CharField(label='Meal ID', disabled=True)
@@ -31,3 +33,24 @@ class RecipeDetailForm(forms.Form):
 
 class MealIDForm(forms.Form):
     meal_id = forms.CharField(max_length=20, widget=forms.HiddenInput())
+
+
+# Form for the Recipe
+class UserRecipeForm(forms.ModelForm):
+    class Meta:
+        model = Recipe
+        fields = ['recipe', 'category', 'region', 'instructions', 'image', 'youtube']
+
+# Form for each Ingredient
+class UserIngredientForm(forms.ModelForm):
+    class Meta:
+        model = Ingredient
+        fields = ['ingredient', 'measure']
+
+# Formset to handle multiple ingredients (but without add/delete functionality)
+UserIngredientFormSet = modelformset_factory(
+    Ingredient,
+    form=UserIngredientForm,
+    extra=0,  # No extra blank forms
+    can_delete=False  # Prevent deletion
+)

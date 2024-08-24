@@ -1,0 +1,106 @@
+{% extends "blog/base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block extra_css %}
+{% endblock extra_css %}
+
+{% block content %}
+    <div class="content-section">
+      <h2>Your Recipes</h2>
+        <!-- Recipe Image and Title -->
+        <div>
+            {% if recipe.image %}
+            <img src="{{ recipe.image }}" alt="Meal Image" class="img-fluid rounded" style="width: 40%;">
+            {% endif %}
+            <h3>{{ recipe.recipe }}</h3>
+        </div>
+
+        <div class="button-row">
+            <div>
+                {% if recipe.youtube %}
+                <a href="{{ recipe.youtube }}" target="_blank" class="btn btn-warning" style="margin: 10px;">Youtube</a>
+                {% endif %}
+            </div>
+
+            <form method="POST" action="{% url 'delete-recipe' recipe.pk %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger" style="margin: 10px;">Delete</button>
+            </form>
+
+            <div>
+                <a href="{% url 'your-recipes' %}" class="btn btn-primary" style="margin: 10px;">Your Recipes</a>
+            </div>
+
+            <div>
+              <a href="{/}" class="btn btn-success" style="margin: 10px;">Edit Recipe</a>
+          </div>
+        </div>
+
+        <!-- Recipe Details -->
+        <div>
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <th>Recipe ID</th>
+                        <td>{{ recipe.pk }}</td>
+                    </tr>
+                    <tr>
+                        <th>Category</th>
+                        <td>{{ recipe.category }}</td>
+                    </tr>
+                    <tr>
+                        <th>Region</th>
+                        <td>{{ recipe.region }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Instructions -->
+        <div>
+            <h5>Instructions</h5>
+            <p>{{ recipe.instructions }}</p>
+        </div>
+
+        <!-- Ingredients and Measures Table -->
+        <div>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Ingredient</th>
+                        <th>Measure</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ingredient in ingredients %}
+                        <tr>
+                            <td>{{ ingredient.ingredient }}</td>
+                            <td>{{ ingredient.measure }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Image and YouTube URLs -->
+        <div>
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <th>Image URL</th>
+                        <td>{{ recipe.image }}</td>
+                    </tr>
+                    <tr>
+                        <th>YouTube URL</th>
+                        <td>{{ recipe.youtube }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock content %}
+
+{% block extra_js %}
+{% endblock extra_js %}
