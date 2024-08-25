@@ -11,7 +11,7 @@
         <!-- Recipe Image and Title -->
         <div>
             {% if recipe.image %}
-            <img src="{{ recipe.image }}" alt="Meal Image" class="img-fluid rounded" style="width: 40%;">
+            <img src="{{ recipe.image }}" alt="Meal Image" class="img-fluid rounded" style="width: 40%">
             {% endif %}
             <h3>{{ recipe.recipe }}</h3>
         </div>
@@ -33,7 +33,7 @@
             </div>
 
             <div>
-              <a href="{/}" class="btn btn-success" style="margin: 10px;">Edit Recipe</a>
+              <a href="{% url 'user-recipe-edit' recipe.pk %}" class="btn btn-success" style="margin: 10px;">Edit Recipe</a>
           </div>
         </div>
 

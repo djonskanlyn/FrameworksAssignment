@@ -1,6 +1,5 @@
 from django import forms
-from django.forms import modelformset_factory
-from .models import Recipe, Ingredient
+from .models import Recipe
 
 class RecipeDetailForm(forms.Form):
     idMeal = forms.CharField(label='Meal ID', disabled=True)
@@ -40,17 +39,32 @@ class UserRecipeForm(forms.ModelForm):
     class Meta:
         model = Recipe
         fields = ['recipe', 'category', 'region', 'instructions', 'image', 'youtube']
+        widgets = {
+            'recipe': forms.TextInput(attrs={'placeholder': 'Recipe Name'}),
+            'instructions': forms.Textarea(attrs={'placeholder': 'Instructions'}),
+        }
 
-# Form for each Ingredient
-class UserIngredientForm(forms.ModelForm):
-    class Meta:
-        model = Ingredient
-        fields = ['ingredient', 'measure']
+# # Form for each Ingredient
+# class UserIngredientForm(forms.ModelForm):
+#     class Meta:
+#         model = Ingredient
+#         fields = ['ingredient', 'measure']
+#         widgets = {
+#             'ingredient': forms.TextInput(attrs={'placeholder': 'Ingredient Name'}),
+#             'measure': forms.TextInput(attrs={'placeholder': 'Measure'}),
+#         }
 
-# Formset to handle multiple ingredients (but without add/delete functionality)
-UserIngredientFormSet = modelformset_factory(
-    Ingredient,
-    form=UserIngredientForm,
-    extra=0,  # No extra blank forms
-    can_delete=False  # Prevent deletion
-)
+#     def __init__(self, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
+#         # Suppress labels for both fields
+#         self.fields['ingredient'].label = False
+#         self.fields['measure'].label = False
+
+# # Formset to handle multiple ingredients (but without add/delete functionality)
+# UserIngredientFormSet = inlineformset_factory(
+#     Recipe,
+#     Ingredient,
+#     form=UserIngredientForm,
+#     extra=0,  # No extra blank forms
+#     can_delete=True  # Prevent deletion
+# )

@@ -2,11 +2,11 @@ import requests
 from django.shortcuts import render, redirect
 from django.http import Http404
 from django.urls import reverse_lazy
-from django.views.generic import TemplateView, DeleteView, DetailView
+from django.views.generic import TemplateView, DeleteView, DetailView, UpdateView
 from django.http import JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Recipe, Ingredient
-from .forms import RecipeDetailForm, MealIDForm, UserRecipeForm, UserIngredientFormSet
+from .forms import RecipeDetailForm, MealIDForm, UserRecipeForm
 from django.contrib.auth.decorators import login_required
 
 @login_required
@@ -162,3 +162,34 @@ class RecipeDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
         # Retrieve the ingredients associated with the recipe
         context['ingredients'] = Ingredient.objects.filter(recipe=self.get_object())
         return context
+    
+class RecipeEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Recipe
+    form_class = UserRecipeForm
+    template_name = 'recipes/your_recipes_edit.html'
+    success_url = reverse_lazy('your-recipes')
+
+    def form_valid(self, form):
+        recipe = form.save()
+
+        # Reset and save the ingredients
+        Ingredient.objects.filter(recipe=recipe).delete()
+
+        for i in range(len(self.request.POST) // 2):
+            ingredient_name = self.request.POST.get(f'ingredient-{i}')
+            measure = self.request.POST.get(f'measure-{i}')
+            if ingredient_name and measure:
+                Ingredient.objects.create(recipe=recipe, ingredient=ingredient_name, measure=measure)
+            elif ingredient_name or measure:  # If one is missing
+                # Handle validation error
+                form.add_error(None, 'Both ingredient and measure fields must be filled out.')
+                return self.form_invalid(form)
+
+        return redirect(self.success_url)
+
+    def test_func(self):
+        # Ensure the current user is the owner of the recipe
+        recipe = self.get_object()
+        return self.request.user == recipe.user
+
+

@@ -1,0 +1,54 @@
+{% extends "blog/base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block extra_css %}
+{% endblock extra_css %}
+
+{% block content %}
+    <div class="content-section">
+        <h2>Edit Recipe</h2>
+        <form method="POST" enctype="multipart/form-data" id="recipe-form">
+            {% csrf_token %}
+            
+            <!-- Recipe form -->
+            {{ form|crispy }}
+
+            <!-- Ingredient Table -->
+            <table class="table table-bordered" id="ingredient-table">
+                <thead>
+                    <tr>
+                        <th>Ingredient</th>
+                        <th>Measure</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody id="ingredient-tbody">
+                    <!-- Loop through existing ingredients -->
+                    {% for ingredient in recipe.ingredient_set.all %}
+                    <tr>
+                        <td><input type="text" name="ingredient-{{ forloop.counter0 }}" value="{{ ingredient.ingredient }}" class="form-control"></td>
+                        <td><input type="text" name="measure-{{ forloop.counter0 }}" value="{{ ingredient.measure }}" class="form-control"></td>
+                        <td><button type="button" class="btn btn-danger delete-ingredient">Delete</button></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <!-- Button to add new ingredient rows -->
+            <button type="button" class="btn btn-secondary" id="add-ingredient" style="margin: 10px;">Add Ingredient</button>
+
+            <!-- Submit button -->
+            <button type="submit" class="btn btn-success" style="margin: 10px;">Save Recipe</button>
+        </form>
+
+        <a href="{% url 'user-recipe-detail' recipe.pk %}" class="btn btn-dark" style="margin: 10px;">Cancel</a>
+    </div>
+
+
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'recipes/js/your_recipes_edit.js' %}"></script>
+{% endblock extra_js %}
+
