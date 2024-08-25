@@ -9,6 +9,9 @@
 
 {% block content %}
     <h3>Your Saved Recipes</h3>
+    <div class="d-flex justify-content-end mb-3">
+        <a href="{% url 'recipe-create' %}" class="btn btn-secondary">Create Recipe</a>
+    </div>
     <div class="ag-theme-alpine" id="your_recipes_grid" ></div>
 {% endblock content %}
 

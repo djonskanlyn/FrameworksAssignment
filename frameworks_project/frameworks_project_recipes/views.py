@@ -2,11 +2,11 @@ import requests
 from django.shortcuts import render, redirect
 from django.http import Http404
 from django.urls import reverse_lazy
-from django.views.generic import TemplateView, DeleteView, DetailView, UpdateView
+from django.views.generic import View, TemplateView, DeleteView, DetailView, UpdateView
 from django.http import JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Recipe, Ingredient
-from .forms import RecipeDetailForm, MealIDForm, UserRecipeForm
+from .forms import RecipeDetailForm, MealIDForm, UserRecipeForm, CreateRecipeForm
 from django.contrib.auth.decorators import login_required
 
 @login_required
@@ -211,4 +211,62 @@ class RecipeEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         recipe = self.get_object()
         return self.request.user == recipe.user
 
+class RecipeCreateView(LoginRequiredMixin, View):
+    template_name = 'recipes/create_recipe.html'
 
+    def get(self, request, *args, **kwargs):
+        # Display an empty form for creating a new recipe
+        recipe_form = CreateRecipeForm()
+        return render(request, self.template_name, {
+            'recipe_form': recipe_form,
+        })
+
+    def post(self, request, *args, **kwargs):
+        # Handle form submission
+        recipe_form = CreateRecipeForm(request.POST, request.FILES)
+
+        # Extract ingredients and measures from POST data
+        ingredients = []
+        measures = []
+
+        # Loop through POST data to find all ingredient/measure pairs
+        for key, value in request.POST.items():
+            if key.startswith('ingredient-'):
+                ingredients.append(value)
+            elif key.startswith('measure-'):
+                measures.append(value)
+
+        # Collect dynamically submitted ingredients and measures
+        valid_pairs = [
+            (ingredient.strip(), measure.strip()) for ingredient, measure in zip(ingredients, measures)
+            if ingredient.strip() and measure.strip()
+        ]
+
+        if recipe_form.is_valid() and valid_pairs:
+            # Save the recipe, link it to the logged-in user
+            recipe = recipe_form.save(commit=False)
+            recipe.user = request.user
+            recipe.save()
+
+            # Save the ingredients linked to the recipe
+            for ingredient_name, measure in valid_pairs:
+                Ingredient.objects.create(
+                    recipe=recipe,
+                    ingredient=ingredient_name,
+                    measure=measure
+                )
+
+            # Redirect to the user's recipe list
+            return redirect('your-recipes')
+
+        # If validation fails, reload the form with errors
+        if not valid_pairs:
+            recipe_form.add_error(None, 'At least one valid ingredient and measure pair is required.')
+
+        return render(request, self.template_name, {
+            'recipe_form': recipe_form,
+            'ingredients': ingredients,
+            'measures': measures,
+        })
+
+    
