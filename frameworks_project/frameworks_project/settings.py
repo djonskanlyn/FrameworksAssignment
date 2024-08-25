@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+
 from pathlib import Path
 import os
 import dj_database_url
@@ -154,6 +155,10 @@ AWS_S3_FILE_OVERWRITE = False  # Ensure that files with the same name are not ov
 AWS_DEFAULT_ACL = None  # Manage access control using AWS S3's bucket policies
 AWS_S3_ADDRESSING_STYLE = 'virtual'
 
+# ===================
+# Youtube API
+# ===================
+YOUTUBE_API_KEY = os.environ.get('FP_YOUTUBE_API_KEY')
 
 # ===================
 # Static Files Setup

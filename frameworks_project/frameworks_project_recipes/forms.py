@@ -1,5 +1,9 @@
+import re
+import requests
 from django import forms
 from .models import Recipe
+from django.core.exceptions import ValidationError
+from django.conf import settings
 
 class RecipeDetailForm(forms.Form):
     idMeal = forms.CharField(label='Meal ID', disabled=True)
@@ -44,27 +48,53 @@ class UserRecipeForm(forms.ModelForm):
             'instructions': forms.Textarea(attrs={'placeholder': 'Instructions'}),
         }
 
-# # Form for each Ingredient
-# class UserIngredientForm(forms.ModelForm):
-#     class Meta:
-#         model = Ingredient
-#         fields = ['ingredient', 'measure']
-#         widgets = {
-#             'ingredient': forms.TextInput(attrs={'placeholder': 'Ingredient Name'}),
-#             'measure': forms.TextInput(attrs={'placeholder': 'Measure'}),
-#         }
+    def clean_youtube(self):
+        youtube_url = self.cleaned_data.get('youtube')
 
-#     def __init__(self, *args, **kwargs):
-#         super().__init__(*args, **kwargs)
-#         # Suppress labels for both fields
-#         self.fields['ingredient'].label = False
-#         self.fields['measure'].label = False
+        if youtube_url:
+            # Step 1: Check if the URL matches YouTube link formats
+            regex = re.compile(r'(https?://)?(www\.)?(youtube|youtu|youtube-nocookie)\.(com|be)/.+')
+            if not regex.match(youtube_url):
+                raise ValidationError("Please enter a valid YouTube URL.")
+            
+            # Step 2: Extract the video ID
+            video_id = self.extract_video_id(youtube_url)
+            if not video_id:
+                raise ValidationError("Invalid YouTube URL. Could not extract video ID.")
 
-# # Formset to handle multiple ingredients (but without add/delete functionality)
-# UserIngredientFormSet = inlineformset_factory(
-#     Recipe,
-#     Ingredient,
-#     form=UserIngredientForm,
-#     extra=0,  # No extra blank forms
-#     can_delete=True  # Prevent deletion
-# )
+            # Step 3: Validate with YouTube Data API
+            if not self.check_video_exists(video_id):
+                raise ValidationError("The YouTube video does not exist or is not available.")
+
+        return youtube_url
+
+    def extract_video_id(self, url):
+        """
+        Extract the video ID from YouTube URLs.
+        Example: https://www.youtube.com/watch?v=VIDEO_ID
+        """
+        long_url_regex = re.compile(r'^.*((youtu.be/)|(v/)|(u/w/)|(embed/)|(watch\?))\??v?=?([^#&?]*).*')
+        match = long_url_regex.match(url)
+        
+        if match:
+            return match.group(7)  # Video ID is in group 7
+        return None
+
+    def check_video_exists(self, video_id):
+        """
+        Check if a YouTube video exists using YouTube Data API.
+        """
+        api_key = settings.YOUTUBE_API_KEY  # Get the API key from settings
+        url = f'https://www.googleapis.com/youtube/v3/videos?id={video_id}&part=id&key={api_key}'
+
+        try:
+            response = requests.get(url)
+            response.raise_for_status()  # Raises an HTTPError for bad responses (4XX, 5XX)
+            data = response.json()
+
+            # Check if the video exists
+            return data['pageInfo']['totalResults'] > 0
+        except requests.RequestException as e:
+            # Handle any errors with the API request (e.g., network issues or invalid API key)
+            raise ValidationError(f"Error validating YouTube video: {str(e)}")
+
