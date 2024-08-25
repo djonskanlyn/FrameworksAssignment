@@ -78,8 +78,15 @@ class SaveRecipeView(LoginRequiredMixin, TemplateView):
 
                 # Save the ingredients related to this recipe
                 for i in range(1, 21):  # Maximum of 20 ingredients
-                    ingredient_name = meal[f'strIngredient{i}'].strip()
-                    measure = meal[f'strMeasure{i}'].strip()
+                    # Safely retrieve and strip the ingredient and measure, if they exist
+                    ingredient_name = meal.get(f'strIngredient{i}')
+                    measure = meal.get(f'strMeasure{i}')
+
+                    # Only strip and save if they are not None
+                    if ingredient_name:
+                        ingredient_name = ingredient_name.strip()
+                    if measure:
+                        measure = measure.strip()
 
                     # Only save ingredient and measure if both are non-empty and non-whitespace
                     if ingredient_name and measure:
