@@ -123,3 +123,9 @@ table.table.table-bordered td {
     min-width: 120px;
 }
 
+.fixed-size-image {
+    width: 300px !important;/* Fixed width for the images */
+    height: 300px !important; /* Fixed height for the images */
+    object-fit: cover !important; /* Ensures the image covers the set width and height while keeping its aspect ratio */
+    border-radius: 10px !important; /* Optional: Adds rounded corners */
+}

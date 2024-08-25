@@ -5,10 +5,14 @@ const gridOptions = {
         { field: "id", headerName: "Id", flex: 0.5},
         { field: "image", headerName: "Image", filter: false,
             cellRenderer: function(params) {
-                if (params.value) {
+                const defaultImageUrl = "https://frameworks-assignment-media-bucket.s3.amazonaws.com/default_recipe_image.jpg";
+                if (params.data.uploaded_image) {
+                    return `<img src="${params.data.uploaded_image}" style="width: 100px; height: 100px; border-radius: 10px;" alt="Recipe Image">`;
+                } else if (params.value) {
                     return `<img src="${params.value}" style="width: 100px; height: 100px; border-radius: 10px;" alt="Recipe Image">`;
+                } else {
+                return `<img src="${defaultImageUrl}" style="width: 100px; height: 100px; border-radius: 10px;" alt="Default Recipe Image">`;
                 }
-                return "No Image";
             }
         },
         { field: "recipe", headerName: "Recipe Name", flex: 1.5 },

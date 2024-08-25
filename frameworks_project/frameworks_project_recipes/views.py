@@ -118,12 +118,16 @@ def user_recipes_data(request):
             ingredients = Ingredient.objects.filter(recipe=recipe).values_list('ingredient', flat=True)
             ingredients_data = '; '.join(ingredients)
 
+            # Use the display_image_url method to get the correct image URL
+            uploaded_image_url = recipe.uploaded_image.url if recipe.uploaded_image else None
+
             recipes_data.append({
                 'id': recipe.id,
                 'recipe': recipe.recipe,
                 'category': recipe.category,
                 'region': recipe.region,
                 'image': recipe.image,
+                'uploaded_image': uploaded_image_url,  # Add the uploaded image URL
                 'youtube': recipe.youtube,
                 'ingredients_data': ingredients_data,
             })
@@ -170,7 +174,15 @@ class RecipeEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     success_url = reverse_lazy('your-recipes')
 
     def form_valid(self, form):
-        recipe = form.save()
+        recipe = form.save(commit=False)  # Don't save yet, we want to make some changes first
+
+        # Handle uploaded image
+        if form.cleaned_data['uploaded_image']:
+            # If a new image is uploaded, clear the API image field
+            if recipe.image:
+                recipe.image = None  # Clear the API image URL
+        
+        recipe.save()  # Now save the recipe with the updated fields
 
         # Reset and save the ingredients
         Ingredient.objects.filter(recipe=recipe).delete()

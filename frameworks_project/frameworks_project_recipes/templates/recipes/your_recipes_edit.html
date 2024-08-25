@@ -7,12 +7,27 @@
 
 {% block content %}
     <div class="content-section">
-        <h2>Edit Recipe</h2>
+        <h3>Edit Recipe</h3>
+
+        <div class="mb-3">
+            <img id="current-image" src="{{ recipe.display_image_url }}" alt="Recipe Image" class="fixed-size-image">
+        </div>
+
         <form method="POST" enctype="multipart/form-data" id="recipe-form">
             {% csrf_token %}
             
             <!-- Recipe form -->
             {{ form|crispy }}
+
+
+            <!-- Conditional handling for 'image' field -->
+            <div class="mb-3">
+                {% if not recipe.image %}
+                    <!-- If the image field is empty, show the image URL or placeholder -->
+                    <label>Image URL:</label>
+                    <input type="text" class="form-control" value="{{ recipe.display_image_url }}" readonly>
+                {% endif %}
+            </div>
 
             <!-- Ingredient Table -->
             <table class="table table-bordered" id="ingredient-table">

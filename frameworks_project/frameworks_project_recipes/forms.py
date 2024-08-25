@@ -42,11 +42,25 @@ class MealIDForm(forms.Form):
 class UserRecipeForm(forms.ModelForm):
     class Meta:
         model = Recipe
-        fields = ['recipe', 'category', 'region', 'instructions', 'image', 'youtube']
+        fields = ['recipe', 'category', 'region', 'instructions', 'uploaded_image', 'image', 'youtube']
         widgets = {
             'recipe': forms.TextInput(attrs={'placeholder': 'Recipe Name'}),
             'instructions': forms.Textarea(attrs={'placeholder': 'Instructions'}),
         }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Remove the 'image' field from the form if it is empty (None)
+        if not self.instance.image:
+            self.fields.pop('image')
+
+    # this was added
+    def clean_uploaded_image(self):
+        image = self.cleaned_data.get('uploaded_image')
+        if image and not image.name.endswith('.jpg'):
+            raise forms.ValidationError("Only JPG images are allowed.")
+        return image
 
     def clean_youtube(self):
         youtube_url = self.cleaned_data.get('youtube')
