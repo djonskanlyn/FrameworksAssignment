@@ -11,7 +11,7 @@ from django.contrib.auth.decorators import login_required
 
 @login_required
 def our_recipes(request):
-    return render(request, 'recipes/our_recipes.html', {'title': 'Recipes'})
+    return render(request, 'recipes/our_recipes.html', {'title': 'Our Recipes'})
 
 @login_required
 def our_recipes_detail(request, idMeal):
